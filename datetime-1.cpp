@@ -1,42 +1,61 @@
 #include <iostream>
+using namespace std;
 class DateTime {
 private:
-  int seconds;     //´Ó1970Äê1ÔÂ1ÈÕ0Ê±¿ªÊ¼¼ÆËãµÄÃëÊý 
+    int seconds;
 public:
-  DateTime();
-  DateTime(int y, int m, int d, int hour, int minute, int second); 
-  DateTime(const DateTime &dt);
-  ~DateTime();
-  void showTime();
-  void showMoon();  //×÷Òµ£º½«µ±Ç°¹«Àú×ª»»ÎªÅ©ÀúÏÔÊ¾³öÀ´ 
+    DateTime();
+    ~DateTime();
+    void showTime();
+    void showSeconds();
+    int year,month,day,hour,minute,second;
 };
 
 int main() {
-  DateTime dt, dt1(2020, 3, 27, 10, 40, 55);
-  DateTime dt2(dt), &dt3 = dt;
-  DateTime *dt4 = &dt;
-  dt.showTime();
-  dt1.showTime();
-  dt2.showTime();
-  dt3.showTime();
-  dt4->showTime();
-  return 0;
+    DateTime dt;
+    dt.showTime();
+    dt.showSeconds();
+    return 0;
 }
 DateTime::DateTime()
 {
+    year = 2020; month = 3; day = 20;
+    hour = 11; minute = 27; second = 55;
 }
-DateTime::DateTime(int y, int m, int d, int hour, int minute, int second)
+DateTime::~DateTime()
 {
-}
-DateTime::DateTime(const DateTime &dt)
-{
-}
-DateTime::~DateTime() 
-{
-  std::cout << " Go die, Ha~Ha~" << std::endl;
+    cout << " Go die, Ha~Ha~" << endl;
 }
 void DateTime::showTime()
 {
-  printf("µ±Ç°Ê±¼ä£º%d/%d/%d %d:%d:%d\n", year, month, day, hour, minute, second);
+    printf("å½“å‰æ—¶é—´%d/%d/%d %d:%d:%d\n", year, month, day, hour, minute, second);
 }
- 
+void DateTime::showSeconds(){
+    int days=0;
+    for (int i=1970;i<year;i++){
+        if ((i%4) == 0) {
+            days+=366;
+        }
+        else days+=365;
+    }
+    for (int j=1;j<month;j++){
+        if (j==1||j==3||j==5||j==7||j==8||j==10||j==12){
+            days+=31;
+        }
+        else if (j==4||j==6||j==9||j==11){
+            days+=30;
+        }
+        else if (j==2 && (year%4) == 0){
+            days+=29;
+        }
+        else {
+            days+=28;
+        }
+        days += day;
+        seconds = day * 24 *3600;
+        seconds = seconds + hour*3600 + minute*60 + second;
+
+    }
+
+    cout << "è·ç¦»1970.1.1 "<< seconds << "ç§’" << endl;
+}
