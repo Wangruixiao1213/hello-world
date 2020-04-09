@@ -1,4 +1,3 @@
-
 #include <iostream>
 class SuperPrime {
 public:
