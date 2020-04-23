@@ -1,39 +1,87 @@
+//作业：面向对象设计以下框架的代码细节，程序能编译运行得到正确结果
 #include <iostream>
+class Prime {
+public:
+    Prime():number(0) {
+    }
+    Prime(int n):number(n) {
+    }
+    ~Prime() {
+    }
+    bool isPrime() {
+        if (number==0||number==1) return false;
+        for (int i=2;i<number;i++){
+            if (number%i==0) return false;
+        }
+        //2到number-1的因子
+        return true;
+    }
+private:
+    const int number;
+};
+class PrimeSet {
+public:
+    PrimeSet(int size) {
+        //集合的构造什么？
+        N = new Prime*[size];
+        this->size = size;
+        index = 0;
+    }
+    ~PrimeSet() {
+        for (int i = 0; i < index; ++i)  //销毁对象
+            delete N[i];
+        delete[] N;
+    }
+    bool add(int n) {
+        if(index == size)  return false;
+        Prime *p = new Prime(n);
+        N[index] = p;
+        index += 1;
+        return true;
+    }
+    bool isAllPrime() {
+        for(int i = 0; i < index; i++)
+            if (!N[i]->isPrime())
+                return false;
+        return true;
+    }
+private:
+    Prime **N;
+    int size, index;
+};
 class SuperPrime {
 public:
-    int number;
-    void _number(int n) {
-        number = n;
+    SuperPrime():number(0), pset(3) {  //为什么必须有？
+    }
+    SuperPrime(int n):number(n), pset(3) {
+        split();  //它就是构造对象
+    }
+    ~SuperPrime() {
     }
     bool isSuperPrime() {
-        split();
-        int a = sum();
-        int b = multi();
-        int c = squareSum();
-        if (isPrime(number) && isPrime(a) && isPrime(b) && isPrime(c))
+        //怎么使用pset？
+        Prime p(number);
+        if (p.isPrime()&& pset.isAllPrime())
             return true;
         return false;
     }
-
 private:
-    int N[20], size_N;
-    bool isPrime(int x) {
-        int i = 2;
-        if(x == 0 || x == 1) return false;
-        for(i = 2; i < x; i++){
-            if(x % i == 0){
-                return false;
-            }
-        }
-        return true;
-    }
-    void split() {
-        int _number = number,i;
-        for(i = 0; _number > 0; i++){
-            N[i] = _number % 10;
-            _number /= 10;
+    const int number;
+    PrimeSet pset;
+    int size_N,N[10];
+    void split() {   //工厂方法设计模式
+        // number split into N
+        int temp = number;
+        int i;
+        for(i=0;temp > 0;i++) {
+            int n = temp % 10;
+            temp /= 10;
+            N[i] = n;//作业：单个数字为对象？还是和/积/平方和为对象？ 我选择和/积/平方和
         }
         size_N = i;
+        pset.add(sum());
+        pset.add(multi());
+        pset.add(squareSum());
     }
     int sum() {
         int sum_number = 0;
@@ -45,8 +93,9 @@ private:
     int multi() {
         int multi_num = 1;
         int i;
-        for(i = 0; i<size_N; i++)
+        for(i = 0; i<size_N; i++){
             multi_num *= N[i];
+        }
         return multi_num;
     }
     int squareSum() {
@@ -56,46 +105,14 @@ private:
             square += (N[i] * N[i]);
         return square;
     }
-};
-class Set {
-public:
-    Set(int from, int to) {
-        size = to - from;
-        _from = from;
-        _to = to;
-    }
-    ~Set() {
-    }
-    int count() {
-        int count = 0;
-        int i;
-        for (i = 0; i < size; i++) {
-            set[i]._number(i + _from);
-            if(set[i].isSuperPrime()) count += 1;
-        }
-        return count;
-    }
-    int sum() {
-        int sum = 0;
-        int i;
-        for (i = 0; i < size; i++) {
-            set[i]._number(i + _from);
-            if(set[i].isSuperPrime()){
-                sum += set[i].number;
-                //std::cout << set[i].number << std::endl;
-            }
 
-        }
-        return sum;
-    }
-private:
-    SuperPrime set[1000];
-    int size;
-    int _from, _to;
 };
+
 int main() {
-    Set ss(100, 999);
-    std::cout << "How Many: " << ss.count() << std::endl;
-    std::cout << "Sum is " << ss.sum() << std::endl;
+    SuperPrime sp(113);
+    if (sp.isSuperPrime())
+        std::cout << "113 is SuperPrime" << std::endl;
+    else
+        std::cout << "113 is NOT SuperPrime" << std::endl;
     return 0;
 }
