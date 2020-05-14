@@ -5,8 +5,6 @@ public:
     }
     Prime(int n):number(n) {
     }
-    ~Prime() {
-    }
     bool isPrime() {
         if (number==0||number==1) return false;
         for (int i=2;i<number;i++){
@@ -18,7 +16,7 @@ public:
 private:
     const int number;
 };
-class PrimeSet {
+class PrimeSet : public Prime {
 public:
     PrimeSet(int size) {
         //集合的构造什么？
@@ -57,7 +55,7 @@ private:
     int size, index;
 };
 
-class SuperPrime {
+class SuperPrime : public Prime{
 public:
     SuperPrime():number(0), pset(3) {  //为什么必须有？
     }
@@ -116,37 +114,6 @@ private:
 
 };
 
-class SuperPrimeSet {
-public:
-    SuperPrimeSet(int from, int to) {
-        size = to - from;
-        for (int i = from; i < to; i++)
-            set[i-from] = new SuperPrime(i);
-    }
-    ~SuperPrimeSet() {
-        for(int i = 0; i < size; i++)
-            delete set[i];
-    }
-    int count() {
-        int count = 0;
-        for (int i = 0; i < size; i++)
-            if(set[i]->isSuperPrime())
-                count += 1;
-        return count;
-    }
-    int sum() {
-        int sum = 0;
-
-        for (int i = 0; i < size; i++)
-            if(set[i].isSuperPrime())
-                sum += set[i];
-
-        return sum;
-    }
-private:
-    SuperPrime **set;
-    int size, index;
-};
 int main() {
     SuperPrime sp(113);
     if (sp.isSuperPrime())
